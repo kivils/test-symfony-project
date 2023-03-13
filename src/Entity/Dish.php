@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ArticleRepository;
+use App\Repository\DishRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ArticleRepository::class)]
-class Article
+#[ORM\Entity(repositoryClass: DishRepository::class)]
+class Dish
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,6 +18,9 @@ class Article
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Description = null;
+
+    #[ORM\Column]
+    private ?float $Price = null;
 
     public function getId(): ?int
     {
@@ -44,6 +47,18 @@ class Article
     public function setDescription(?string $Description): self
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->Price;
+    }
+
+    public function setPrice(float $Price): self
+    {
+        $this->Price = $Price;
 
         return $this;
     }

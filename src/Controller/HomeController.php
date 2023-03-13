@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ExitController extends AbstractController
+class HomeController extends AbstractController
 {
-    #[Route('/exit', name: 'app_exit')]
+    #[Route('/', name: 'home')]
     public function index(): Response
     {
-        return $this->render('exit/index.html.twig', [
-            'controller_name' => 'ExitController',
+        return $this->render('home/index.html.twig', [
+            'controller_name' => 'HomeController',
         ]);
     }
 }
