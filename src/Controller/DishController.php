@@ -38,6 +38,25 @@ class DishController extends AbstractController
         if($form->isSubmitted()) {
             // EntityManager
             $em = $this->getDoctrine()->getManager();
+
+            // Get image from the form
+            $image = $form->get('image')->getData();
+
+            // Set unique file name
+            if($image) {
+                $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME) . '-' . md5(uniqid()) . '.' . $image->guessExtension();
+            }
+
+            // Move image to a proper folder
+            $image->move(
+                $this->getParameter('images_folder'),
+                $filename
+            );
+
+            // Update image in Dish object
+            $dish->setImage($filename);
+
+            // Update Dish and save to database
             $em->persist($dish);
             $em->flush();
 
@@ -53,7 +72,8 @@ class DishController extends AbstractController
 
     /**
      * Delete dish
-     * @param Request $request
+     * @param $id
+     * @param DishRepository $dishRepository
      * @return Response
      */
     #[Route('/delete/{id}', name: 'delete')]
@@ -69,4 +89,31 @@ class DishController extends AbstractController
 
         return $this->redirect($this->generateUrl('dishes.list'));
     }
+
+    /**
+     * Show dish page: Using ParamConverter: For simple cases with few data
+     * @param Dish $dish
+     * @return Response
+     */
+    #[Route('/{id}', name: 'show')]
+    public function show(Dish $dish): Response {
+        return $this->render('dish/detail.html.twig', [
+            'dish' => $dish
+        ]);
+    }
+
+    /**
+     * Show dish page: Using DishRepository: For more complex cases with much data
+     * @param $id
+     * @param DishRepository $dishRepository
+     * @return Response
+     */
+//    #[Route('/{id}', name: 'show')]
+//    public function show($id, DishRepository $dishRepository): Response {
+//        $dish = $dishRepository->find($id);
+//
+//        return $this->render('dish/detail.html.twig', [
+//            'dish' => $dish
+//        ]);
+//    }
 }
